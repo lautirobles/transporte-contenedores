@@ -1,4 +1,4 @@
-package com.backend.contenedores.controllers;
+package com.backend.logistica.controllers;
 
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.RequiredArgsConstructor;
-import com.backend.contenedores.entities.Ruta;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
+
 
 
 @RequiredArgsConstructor

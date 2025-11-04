@@ -1,4 +1,4 @@
-package com.backend.contenedores.entities;
+package com.backend.logistica.entities;
 
 
 import jakarta.persistence.*;
@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-
+import com.backend.gestion.entities.Deposito;
 import lombok.*;
 
 @Entity

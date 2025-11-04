@@ -1,4 +1,4 @@
-package com.backend.contenedores.entities;
+package com.backend.logistica.entities;
 
 
 import jakarta.persistence.*;
