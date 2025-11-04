@@ -1,0 +1,294 @@
+package com.tuempresa.tuapp.entities;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import lombok.*;
+
+/**
+ * Entidades JPA generadas según el DER provisto.
+ * Requieren Lombok (opcional) y Jackson (para @JsonIgnore).
+ *
+ * Si preferís no usar Lombok, decímelo y te devuelvo las mismas clases
+ * con getters/setters explícitos.
+ */
+
+/* --------------------- Cliente --------------------- */
+@Entity
+@Table(name = "clientes")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Cliente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String razonSocial; // razon_social
+    private String cuil;
+    private String numero; // puede ser telefono o numero de cliente
+
+    // Relaciones
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Solicitud> solicitudes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "clienteAsociado", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Contenedor> contenedores = new ArrayList<>();
+}
+
+/* --------------------- Deposito --------------------- */
+@Entity
+@Table(name = "depositos")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Deposito {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nombre;
+    private String direccion;
+    private BigDecimal coordenadas; // si necesitás lat/long separar en dos campos (lat, lon)
+
+    @OneToMany(mappedBy = "deposito", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Estadia> estadias = new ArrayList<>();
+}
+
+/* --------------------- Contenedor --------------------- */
+@Entity
+@Table(name = "contenedores")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Contenedor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private BigDecimal peso;
+    private BigDecimal volumen;
+    private String estado;
+
+    // cliente asociado (cl_asociado)
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente clienteAsociado;
+
+    // Estancias en depósitos
+    @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Estadia> estadias = new ArrayList<>();
+
+    // Historial de cambios de estado
+    @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<CambioEstado> cambiosEstado = new ArrayList<>();
+
+    // Si hay solicitudes que referencian este contenedor (opcional)
+    @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Solicitud> solicitudes = new ArrayList<>();
+}
+
+/* --------------------- Estadia --------------------- */
+@Entity
+@Table(name = "estadias")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Estadia {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // FK a deposito
+    @ManyToOne
+    @JoinColumn(name = "deposito_id")
+    private Deposito deposito;
+
+    // FK a contenedor
+    @ManyToOne
+    @JoinColumn(name = "contenedor_id")
+    private Contenedor contenedor;
+
+    private LocalDateTime fechaIngreso;
+    private LocalDateTime fechaSalida;
+}
+
+/* --------------------- CambioEstado --------------------- */
+@Entity
+@Table(name = "cambios_estado")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class CambioEstado {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // FK a contenedor
+    @ManyToOne
+    @JoinColumn(name = "contenedor_id")
+    private Contenedor contenedor;
+
+    private String estadoAnterior;
+    private String estadoNuevo;
+    private LocalDateTime fechaCambio;
+}
+
+/* --------------------- Solicitud --------------------- */
+@Entity
+@Table(name = "solicitudes")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Solicitud {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long numero; // en el DER aparece 'numero' (PK)
+
+    // FK a contenedor
+    @ManyToOne
+    @JoinColumn(name = "contenedor_id")
+    private Contenedor contenedor;
+
+    // FK a cliente
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
+    private String estado;
+
+    // Ruta asignada (opcional) -- ManyToOne a Ruta
+    @ManyToOne
+    @JoinColumn(name = "ruta_id")
+    private Ruta rutaAsignada;
+
+    private BigDecimal costoEstimado;
+    private Integer tiempoEstimado; // en minutos o la unidad que uses
+    private BigDecimal costoFinal;
+    private Integer tiempoReal;
+}
+
+/* --------------------- Ruta --------------------- */
+@Entity
+@Table(name = "rutas")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Ruta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Integer cantidadTramos;
+    private Integer cantidadDepositos;
+
+    // Tramos que componen la ruta
+    @OneToMany(mappedBy = "ruta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tramo> tramos = new ArrayList<>();
+
+    // Si querés ver las solicitudes que usan esta ruta (bidireccional)
+    @OneToMany(mappedBy = "rutaAsignada", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Solicitud> solicitudes = new ArrayList<>();
+}
+
+/* --------------------- Tramo --------------------- */
+@Entity
+@Table(name = "tramos")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Tramo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idTramo;
+
+    private String origen;
+    private String destino;
+    private String tipo;
+    private String estado;
+
+    private BigDecimal costoAproximado;
+    private BigDecimal costoReal;
+
+    private LocalDateTime fechaHoraInicioEstimada;
+    private LocalDateTime fechaHoraFinEstimada;
+    private LocalDateTime fechaHoraInicioReal;
+    private LocalDateTime fechaHoraFinReal;
+
+    // Camión asignado al tramo
+    @ManyToOne
+    @JoinColumn(name = "camion_id")
+    private Camion camion;
+
+    // Ruta a la que pertenece el tramo
+    @ManyToOne
+    @JoinColumn(name = "ruta_id")
+    private Ruta ruta;
+}
+
+/* --------------------- Camion --------------------- */
+@Entity
+@Table(name = "camiones")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Camion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String dominio;
+    private String nombreTransportista;
+    private String telefono;
+
+    private Integer capPeso;
+    private Integer capVolumen;
+
+    private Boolean disponibilidad;
+    private BigDecimal costos; // si necesitás desglosarlo, separarlo
+    private BigDecimal consumoPromedio;
+
+    // Tramos asignados al camión
+    @OneToMany(mappedBy = "camion", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Tramo> tramos = new ArrayList<>();
+}
+
+/* --------------------- Tarifa --------------------- */
+@Entity
+@Table(name = "tarifas")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class Tarifa {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String tipo;
+    private BigDecimal valor;
+    private BigDecimal pesoMin;
+    private BigDecimal pesoMax;
+}
