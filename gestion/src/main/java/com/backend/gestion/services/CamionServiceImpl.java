@@ -1,5 +1,11 @@
 package com.backend.gestion.services;
+import org.springframework.stereotype.Service;
 
-public class CamionServiceImpl {
+import com.backend.gestion.services.interfaces.CamionService;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class CamionServiceImpl implements CamionService {
     
 }

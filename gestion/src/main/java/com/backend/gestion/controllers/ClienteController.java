@@ -22,4 +22,6 @@ public class ClienteController {
     public ResponseEntity<List<Cliente>> getAllClientes() {
         return ResponseEntity.ok(service.getAllClientes());
     }
+
+    
 }

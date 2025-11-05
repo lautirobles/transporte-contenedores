@@ -16,7 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class Estadia {
+public class Estadia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

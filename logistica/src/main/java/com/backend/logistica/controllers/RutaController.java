@@ -3,7 +3,7 @@ package com.backend.logistica.controllers;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-// import com.backend.contenedores.services.;
+import com.backend.logistica.services.RutaServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,12 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("api/ruta")
 public class RutaController {
- 
-    // private final RutasService service;
+/* 
+    private final RutaServiceImpl service;
     
     @GetMapping
     public ResponseEntity<Set<RutaDto>> getRutas(){
-        // var response = service.getAll();
+        var response = service.getAll();
     }
 
     @PostMapping
@@ -39,4 +39,5 @@ public class RutaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+        */
 }

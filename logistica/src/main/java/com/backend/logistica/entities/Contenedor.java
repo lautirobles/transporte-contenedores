@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.backend.gestion.entities.Cliente;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import lombok.*;
@@ -19,7 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class Contenedor {
+public class Contenedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,17 +31,17 @@ class Contenedor {
     private Cliente clienteAsociado;
 
     // Estancias en depósitos
-    @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Estadia> estadias = new ArrayList<>();
+    // @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonIgnore
+    // private List<Estadia> estadias = new ArrayList<>();
 
     // Historial de cambios de estado
-    @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<CambioEstado> cambiosEstado = new ArrayList<>();
+    // @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonIgnore
+    // private List<CambioEstado> cambiosEstado = new ArrayList<>();
 
     // Si hay solicitudes que referencian este contenedor (opcional)
-    @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Solicitud> solicitudes = new ArrayList<>();
+    // @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonIgnore
+    // private List<Solicitud> solicitudes = new ArrayList<>();
 }
