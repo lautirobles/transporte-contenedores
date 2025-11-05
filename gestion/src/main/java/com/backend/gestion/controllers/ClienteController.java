@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.backend.gestion.entities.Cliente;
@@ -26,7 +27,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> createCliente(Cliente cliente) {
+    public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
         return ResponseEntity.ok(service.createCliente(cliente));
     
     }
