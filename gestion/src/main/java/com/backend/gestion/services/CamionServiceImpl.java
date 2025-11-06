@@ -8,9 +8,7 @@ import com.backend.gestion.repositories.CamionRepository;
 import java.util.List;
 
 
-
 @Service
-
 public class CamionServiceImpl implements CamionService {
     
     private final CamionRepository camionRepository;
@@ -29,18 +27,18 @@ public class CamionServiceImpl implements CamionService {
         return camionRepository.save(camion);
     }
 
-    // @Override
-    // public Camion updateCamion(Long id, Camion camion) {
-    //     if (camionRepository.existsById(id)) {
-    //         camion.setId(id);
-    //         return camionRepository.save(camion);
-    //     }
-    //     return null; // O lanzar una excepción
-    // }
+    @Override
+    public Camion updateCamion(Long id, Camion camion) {
+        if (camionRepository.existsById(id)) {
+            camion.setId(id);
+            return camionRepository.save(camion);
+        }
+        return null; // se
+        }
 
-    // @Override
-    // public void deleteCamion(Long id) {
-    //     camionRepository.deleteById(id);
-    // }
+    @Override
+    public void deleteCamion(Long id) {
+        camionRepository.deleteById(id);
+    }
 
 }

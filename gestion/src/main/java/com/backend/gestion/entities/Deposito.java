@@ -20,7 +20,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class Deposito {
+
+public class Deposito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

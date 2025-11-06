@@ -1,7 +1,7 @@
 package com.backend.gestion.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
 import java.math.BigDecimal;
 
 
@@ -16,6 +16,10 @@ import lombok.*;
 public class Camion {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String dominio;
 
     @Column(name = "nombre_transportista")

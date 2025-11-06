@@ -8,7 +8,7 @@ public interface CamionService {
 
     Camion createCamion(Camion camion);
 
-    // Camion updateCamion(Long id, Camion camion);
+    Camion updateCamion(Long id, Camion camion);
 
-    // void deleteCamion(Long id);
+    void deleteCamion(Long id);
 }

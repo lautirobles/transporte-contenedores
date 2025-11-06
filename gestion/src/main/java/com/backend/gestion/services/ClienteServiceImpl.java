@@ -25,4 +25,19 @@ public class ClienteServiceImpl implements ClienteService {
     public Cliente createCliente(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
+
+    @Override
+    public Cliente updateCliente(Long id, Cliente cliente) {
+        if (clienteRepository.existsById(id)) {
+            cliente.setId(id);
+            return clienteRepository.save(cliente);
+        }
+        return null; // se puede cambiar el return por un mensaje mas representativo ademas del estado de la request.
+    }
+
+    @Override
+    public void deleteCliente(Long id) {
+        clienteRepository.deleteById(id);
+    }
 }
+
