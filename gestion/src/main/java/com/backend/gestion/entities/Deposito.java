@@ -2,7 +2,7 @@ package com.backend.gestion.entities;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+
 import java.math.BigDecimal;
 // import java.time.LocalDateTime;
 // import java.util.ArrayList;
@@ -28,7 +28,11 @@ public class Deposito {
 
     private String nombre;
     private String direccion;
-    private BigDecimal coordenadas; // si necesitás lat/long separar en dos campos (lat, lon)
+    @Column(precision = 10, scale = 6) // o scale 4, ver segun el OSRM
+    private BigDecimal latitud;
+
+    @Column(precision = 10, scale = 6)
+    private BigDecimal longitud;
 
     // @OneToMany(mappedBy = "deposito", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonIgnore
