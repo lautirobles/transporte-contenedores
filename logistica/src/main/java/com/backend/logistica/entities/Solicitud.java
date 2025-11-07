@@ -25,7 +25,7 @@ public class Solicitud {
     private Contenedor contenedor;
 
     // FK a cliente
-    @ManyToOne
+    // @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Long cliente;
 
