@@ -27,7 +27,7 @@ public class Cliente {
 
     private String razonSocial; // razon_social
     private String cuil;
-    private int numero; // puede ser telefono o numero de cliente
+    private Long numero; // puede ser telefono o numero de cliente
 
     // // Relaciones
     // @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
