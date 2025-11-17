@@ -53,4 +53,4 @@ public class CambioEstadoServiceImpl implements CambioEstadoService {
         }
         cambioEstadoRepository.deleteById(id);
     }
-}
+}   
