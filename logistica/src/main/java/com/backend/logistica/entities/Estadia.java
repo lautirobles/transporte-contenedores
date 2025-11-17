@@ -22,7 +22,7 @@ public class Estadia {
     private Long id;
 
     // FK a deposito
-    @ManyToOne
+    // @ManyToOne
     @JoinColumn(name = "deposito_id")
     private Long deposito;
 

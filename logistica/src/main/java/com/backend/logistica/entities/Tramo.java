@@ -34,7 +34,7 @@ public class Tramo {
     private LocalDateTime fechaHoraFinReal;
 
     // Camión asignado al tramo
-    @ManyToOne
+    // @ManyToOne
     @JoinColumn(name = "camion_id")
     private String camion;
 

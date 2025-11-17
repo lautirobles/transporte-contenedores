@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
 
-import com.backend.gestion.entities.Cliente;
-
-
-
 import lombok.*;
 
 @Entity
@@ -26,9 +22,9 @@ public class Contenedor {
     private String estado;
 
     // cliente asociado (cl_asociado)
-    @ManyToOne
+    // @ManyToOne
     @JoinColumn(name = "cliente_id")
-    private Cliente clienteAsociado;
+    private Long clienteAsociado;
 
     // Estancias en depósitos
     // @OneToMany(mappedBy = "contenedor", cascade = CascadeType.ALL, orphanRemoval = true)
