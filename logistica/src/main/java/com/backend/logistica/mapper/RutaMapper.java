@@ -18,4 +18,14 @@ public class RutaMapper {
 
         return ruta;
     }
+
+    public static RutaDto entityToDto(Ruta ruta){
+        if(ruta == null) return null;
+
+        return new RutaDto(
+            ruta.getId(),
+            ruta.getCantidadTramos(),
+            ruta.getCantidadDepositos()
+        );
+    }
 }
