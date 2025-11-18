@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("api/tramo")
+@RequestMapping("api/v1/logistica/tramo")
 public class TramoController {
     
     private final TramoService service;
