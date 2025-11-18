@@ -9,6 +9,7 @@ import com.backend.logistica.entities.dto.TramoDto;
 import com.backend.logistica.mapper.TramoMapper;
 import com.backend.logistica.mapper.RutaMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,12 +37,28 @@ public class TramoServiceImpl implements TramoService {
     }
 
     @Override
-    public void updateEstadoTramo(Long idTramo){
+    public void updateEstadoTramo(Long idTramo, String estado){
         Tramo tramo = tramoRepository.findById(idTramo)
             .orElseThrow(() -> new IllegalArgumentException("Tramo no encontrado con id: " + idTramo));
         
-        // Cambiar estado (ajusta la lógica según tu necesidad)
-        tramo.setEstado("completado");
+        
+        tramo.setEstado(estado);
+        if("Iniciado".equals(estado)){
+            tramo.setFechaHoraInicioReal(LocalDateTime.now());
+        }else if("Finalizado".equals(estado)){
+            tramo.setFechaHoraFinReal(LocalDateTime.now());
+        }
+
+        tramoRepository.save(tramo);
+    }
+
+    @Override
+    public void updateCamion(Long id, Long idCamion){
+        Tramo tramo = tramoRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Tramo no encontrado con id: " + id));
+        
+        tramo.setCamion(idCamion);
+
         tramoRepository.save(tramo);
     }
 }
