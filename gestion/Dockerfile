@@ -1,7 +1,7 @@
 # --- 1. Etapa de Construcción (Build Stage) ---
 # Usamos una imagen de Maven con Java 17 para compilar el proyecto.
 # El alias "build" nos permitirá referirnos a esta etapa más adelante.
-FROM maven:3.8.5-openjdk-17 AS build
+FROM maven:3.8.5-openjdk-21 AS build
 
 # Establecemos el directorio de trabajo dentro del contenedor
 WORKDIR /app
@@ -22,7 +22,7 @@ RUN ./mvnw package -DskipTests
 
 # --- 2. Etapa de Ejecución (Run Stage) ---
 # Partimos de una imagen ligera que solo contiene el entorno de ejecución de Java (JRE).
-FROM openjdk:17-jdk-slim
+FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copiamos únicamente el archivo .jar generado en la etapa de construcción.
