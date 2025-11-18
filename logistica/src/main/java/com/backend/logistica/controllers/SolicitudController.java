@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
-import com.backend.logistica.entities.Solicitud;
+import com.backend.logistica.entities.dto.SolicitudDto;
 import com.backend.logistica.entities.dto.RutaDto;
 import com.backend.logistica.entities.dto.UpdateSolicitudDto;
 import com.backend.logistica.services.interfaces.SolicitudService;
@@ -27,33 +28,41 @@ public class SolicitudController {
     private final SolicitudService service;
 
     @GetMapping
-    public ResponseEntity<List<Solicitud>> getSolicitudes(){
+    public ResponseEntity<List<SolicitudDto>> getSolicitudes(){
         var response = service.getAllSolicitudes();
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
     @GetMapping("/{idSolicitud}")
-    public ResponseEntity<Solicitud> getSolicitudPorId(@PathVariable Long idSolicitud){
+    public ResponseEntity<SolicitudDto> getSolicitudPorId(@PathVariable Long idSolicitud){
         var response = service.getSolicitud(idSolicitud);
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
     @PatchMapping("/{idSolicitud}")
-    public ResponseEntity<Solicitud> updateFechaCostoFecha(
+    public ResponseEntity<Void> updateFechaCostoFecha(
         @PathVariable Long idSolicitud,
         @RequestBody UpdateSolicitudDto dto){
-        var response = service.updateFechaCostoSolicitud(idSolicitud, dto);
+        service.updateFechaCostoSolicitud(idSolicitud, dto);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/{idSolicitud}/ruta-asignada")
-    public ResponseEntity<Solicitud> updateRutaAsignada(
+    public ResponseEntity<Void> updateRutaAsignada(
         @PathVariable Long idSolicitud,
         @RequestBody RutaDto dto){
-        var response = service.updateRutaAsignadaSolicitud(idSolicitud,dto);
+        service.updateRutaAsignadaSolicitud(idSolicitud,dto);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping
+    public ResponseEntity<SolicitudDto> createSolicitud(
+        @RequestBody SolicitudDto solicitudDto){
+            var response = service.createSolicitud(solicitudDto);
+
+            return ResponseEntity.ok(response);
     }
     
 
