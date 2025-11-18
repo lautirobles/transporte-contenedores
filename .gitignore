@@ -1,0 +1,38 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+### Maven ###
+target/
+.mvn/
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+
+### VS Code ###
+.vscode/
+
+### Eclipse ###
+.settings/
+.classpath
+.project
+
+### OSRM Data ###
+/osrm-data/
+
+### H2 Database files ###
+data/
