@@ -11,6 +11,8 @@ public interface TramoService {
     
     List<TramoDto> getTramosPorRuta(RutaDto ruta);
 
-    void updateEstadoTramo(Long id);
+    void updateEstadoTramo(Long id, String estado);
+
+    void updateCamion(Long id, Long idCamion);
 
 }
