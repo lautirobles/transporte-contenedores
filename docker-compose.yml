@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
     command: start-dev
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
     ports:
       - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
     networks:
