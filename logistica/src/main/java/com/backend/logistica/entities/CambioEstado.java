@@ -25,7 +25,10 @@ public class CambioEstado {
     @JoinColumn(name = "contenedor_id")
     private Contenedor contenedor;
 
+    @Column(name="estado_anterior")
     private String estadoAnterior;
+    @Column(name="estado_nuevo")
     private String estadoNuevo;
+    @Column(name="fecha_cambio")
     private LocalDateTime fechaCambio;
 }

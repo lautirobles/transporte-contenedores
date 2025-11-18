@@ -36,8 +36,12 @@ public class Solicitud {
     @JoinColumn(name = "ruta_id")
     private Ruta rutaAsignada;
 
+    @Column(name="costo_estimado")
     private BigDecimal costoEstimado;
+    @Column(name="tiempo_estimado")
     private Integer tiempoEstimado; // en minutos o la unidad que uses
+    @Column(name="costo_final")
     private BigDecimal costoFinal;
+    @Column(name="tiempo_real")
     private Integer tiempoReal;
 }

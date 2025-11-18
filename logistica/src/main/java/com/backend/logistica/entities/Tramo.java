@@ -25,12 +25,18 @@ public class Tramo {
     private String tipo;
     private String estado;
 
+    @Column(name="costo_aproximado")
     private double costoAproximado;
+    @Column(name="costo_real")
     private double costoReal;
 
+    @Column(name="fecha_hora_inicio_estimada")
     private LocalDateTime fechaHoraInicioEstimada;
+    @Column(name="fecha_hora_fin_estimada")
     private LocalDateTime fechaHoraFinEstimada;
+    @Column(name="fecha_hora_inicio_real")
     private LocalDateTime fechaHoraInicioReal;
+    @Column(name="fecha_hora_fin_real")
     private LocalDateTime fechaHoraFinReal;
 
     // Camión asignado al tramo
