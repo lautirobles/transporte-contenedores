@@ -1,20 +1,22 @@
 package com.backend.logistica.services;
 import com.backend.logistica.repositories.CambioEstadoRepositoryImpl;
 import com.backend.logistica.services.interfaces.CambioEstadoService;
+
+import lombok.RequiredArgsConstructor;
+
 import com.backend.logistica.entities.CambioEstado;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class CambioEstadoServiceImpl implements CambioEstadoService {
     
     private final CambioEstadoRepositoryImpl cambioEstadoRepository;
-
-    public CambioEstadoServiceImpl(CambioEstadoRepositoryImpl cambioEstadoRepository){
-        this.cambioEstadoRepository = cambioEstadoRepository;
-    }
 
     @Override
     public List<CambioEstado> getAllCambiosEstado(){
