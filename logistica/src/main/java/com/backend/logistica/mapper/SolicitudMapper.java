@@ -2,10 +2,8 @@ package com.backend.logistica.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.backend.logistica.repositories.RutaRepositoryImpl;
 import com.backend.logistica.entities.Solicitud;
 import com.backend.logistica.entities.dto.SolicitudDto;
-import com.backend.logistica.repositories.ContenedorRepositoryImpl;
 
 import lombok.RequiredArgsConstructor;
 
