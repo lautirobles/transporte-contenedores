@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("api/solicitud")
+@RequestMapping("api/v1/logistica/solicitud")
 public class SolicitudController {
     
     private final SolicitudService service;

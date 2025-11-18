@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("api/ruta")
+@RequestMapping("api/v1/logistica/ruta")
 public class RutaController {
 
     private final RutaService service;

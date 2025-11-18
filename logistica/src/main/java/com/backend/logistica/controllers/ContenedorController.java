@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("api/contenedor")
+@RequestMapping("api/v1/logistica/contenedor")
 public class ContenedorController {
 
     private final ContenedorService service;
