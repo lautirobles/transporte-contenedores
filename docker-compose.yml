@@ -1,0 +1,57 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    command: start-dev
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    ports:
+      - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
+    networks:
+      - transporte-net
+
+  gestion:
+    build: ./gestion
+    container_name: gestion-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - keycloak
+    networks:
+      - transporte-net
+
+  logistica:
+    build: ./logistica
+    container_name: logistica-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - keycloak
+    networks:
+      - transporte-net
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - gestion
+      - logistica
+    networks:
+      - transporte-net
+
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    # platform: linux/arm64
+    container_name: osrm
+    ports:
+    - "5000:5000"
+    volumes:
+    - ./osrm-data:/data
+    command: osrm-routed /data/argentina-latest.osrm
+
+networks:
+  transporte-net:
+    driver: bridge
