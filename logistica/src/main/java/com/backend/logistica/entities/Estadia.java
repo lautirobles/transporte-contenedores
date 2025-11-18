@@ -31,6 +31,8 @@ public class Estadia {
     @JoinColumn(name = "contenedor_id")
     private Contenedor contenedor;
 
+    @Column(name="fecha_ingreso")
     private LocalDateTime fechaIngreso;
+    @Column(name="fecha_salida")
     private LocalDateTime fechaSalida;
 }
