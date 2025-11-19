@@ -44,6 +44,7 @@ services:
     networks:
       - transporte-net
 
+<<<<<<< HEAD
   osrm:
     image: ghcr.io/project-osrm/osrm-backend:latest
     # platform: linux/arm64 # Descomentar solo si usas una Mac con chip M1/M2
@@ -53,6 +54,35 @@ services:
     volumes:
     - ./osrm-data:/data
     command: osrm-routed /data/argentina-251117.osrm # Asegúrate de que este nombre coincida con tu archivo
+=======
+  # osrm:
+  #   image: ghcr.io/project-osrm/osrm-backend:v5.27.1
+  # #   # platform: linux/arm64
+  #   container_name: osrm
+  #   ports:
+  #   - "5000:5000"
+  #   volumes:
+  #   - ./osrm-data:/data
+  #   command: osrm-routed --algorithm mld /data/argentina-251117.osrm
+  # osrm:
+  #   image: osrm/osrm-backend:v5.25.0
+  #   container_name: osrm
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./osrm-data:/data
+  #   command: osrm-routed --algorithm mld /data/argentina-251117.osrm
+  # 
+  # supuestamente ES EL QUE SIRVE
+  # osrm:
+  #   image: osrm-custom:5.26.0
+  #   container_name: osrm
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./osrm-data:/data
+  #   # No necesita command porque está en el CMD del Dockerfile
+>>>>>>> c65d2c8fdd05ae54c3a80d824d58ce0c48bd07e0
 
 volumes:
   keycloak_data:
