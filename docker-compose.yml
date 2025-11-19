@@ -6,6 +6,9 @@ services:
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    volumes:
+      # CRUCIAL: Mapea un volumen local a la carpeta de configuración de Keycloak
+      - keycloak_data:/opt/keycloak/data
     ports:
       - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
     networks:
@@ -42,15 +45,19 @@ services:
     networks:
       - transporte-net
 
-  # osrm:
-  #   image: ghcr.io/project-osrm/osrm-backend:latest
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend:latest
   #   # platform: linux/arm64
-  #   container_name: osrm
-  #   ports:
-  #   - "5000:5000"
-  #   volumes:
-  #   - ./osrm-data:/data
-  #   command: osrm-routed /data/argentina-251117.osrm
+    container_name: osrm
+    ports:
+    - "5000:5000"
+    volumes:
+    - ./osrm-data:/data
+    command: osrm-routed /data/argentina-251117.osrm
+
+volumes:
+  keycloak_data:
+    driver: local
 
 networks:
   transporte-net:
