@@ -1,0 +1,8 @@
+server:
+  port: 8080
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+google:
+  maps:
+    apikey: AIzaSyAUp0j1WFgacoQYTKhtPI-CF6Ld7a7jHSg

@@ -28,11 +28,7 @@ public class Deposito {
 
     private String nombre;
     private String direccion;
-    @Column(precision = 10, scale = 6) // o scale 4, ver segun el OSRM
-    private BigDecimal latitud;
-
-    @Column(precision = 10, scale = 6)
-    private BigDecimal longitud;
+    private String coordenadas;
 
     // @OneToMany(mappedBy = "deposito", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonIgnore
