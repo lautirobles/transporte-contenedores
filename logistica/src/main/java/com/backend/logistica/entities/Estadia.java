@@ -23,7 +23,7 @@ public class Estadia {
 
     // FK a deposito
     // @ManyToOne
-    @JoinColumn(name = "deposito_id")
+    @Column(name = "deposito_id")
     private Long deposito;
 
     // FK a contenedor
