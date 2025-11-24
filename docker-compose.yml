@@ -6,12 +6,23 @@ services:
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      # - KC_HOSTNAME=localhost
+      - KC_HTTP_ENABLED=true 
+      # Dice a Keycloak: "No fuerces un nombre de host fijo, usa el que viene en la petición"
+      - KC_HOSTNAME_STRICT=false 
+      - KC_HOSTNAME_STRICT_HTTPS=false
     ports:
       - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
     volumes:
       - keycloak_data:/opt/keycloak/data
     networks:
       - transporte-net
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080;echo -e \"GET /realms/master HTTP/1.1\r\nhost: localhost\r\nConnection: close\r\n\r\n\" >&3;cat <&3 | grep -q \"HTTP/1.1 200 OK\""]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
 
   gestion:
     build: ./gestion
@@ -22,6 +33,8 @@ services:
       - keycloak
     networks:
       - transporte-net
+    # volumes:
+      # - ./gestion-data:/app/data
 
   logistica:
     build: ./logistica
@@ -32,6 +45,8 @@ services:
       - keycloak
     networks:
       - transporte-net
+    # volumes:
+      # - ./logistica-data:/app/data
 
   api-gateway:
     build: ./api-gateway
@@ -39,50 +54,23 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - gestion
-      - logistica
+      gestion:
+        condition: service_started
+      logistica:
+        condition: service_started
+      keycloak:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=DEBUG
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY_OAUTH2=DEBUG
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_GATEWAY=DEBUG
+      - LOGGING_LEVEL_ROOT=INFO
+      # Asegurar conexión a Keycloak
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/tpi-backend/protocol/openid-connect/certs
     networks:
       - transporte-net
-
-<<<<<<< HEAD
-  osrm:
-    image: ghcr.io/project-osrm/osrm-backend:latest
-    # platform: linux/arm64 # Descomentar solo si usas una Mac con chip M1/M2
-    container_name: osrm
-    ports:
-    - "5000:5000"
-    volumes:
-    - ./osrm-data:/data
-    command: osrm-routed /data/argentina-251117.osrm # Asegúrate de que este nombre coincida con tu archivo
-=======
-  # osrm:
-  #   image: ghcr.io/project-osrm/osrm-backend:v5.27.1
-  # #   # platform: linux/arm64
-  #   container_name: osrm
-  #   ports:
-  #   - "5000:5000"
-  #   volumes:
-  #   - ./osrm-data:/data
-  #   command: osrm-routed --algorithm mld /data/argentina-251117.osrm
-  # osrm:
-  #   image: osrm/osrm-backend:v5.25.0
-  #   container_name: osrm
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./osrm-data:/data
-  #   command: osrm-routed --algorithm mld /data/argentina-251117.osrm
-  # 
-  # supuestamente ES EL QUE SIRVE
-  # osrm:
-  #   image: osrm-custom:5.26.0
-  #   container_name: osrm
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./osrm-data:/data
-  #   # No necesita command porque está en el CMD del Dockerfile
->>>>>>> c65d2c8fdd05ae54c3a80d824d58ce0c48bd07e0
+    
 
 volumes:
   keycloak_data:

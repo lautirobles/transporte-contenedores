@@ -27,16 +27,21 @@ public class SolicitudController {
     
     private final SolicitudService service;
 
+    @GetMapping("/test")
+    public String publicTest() {
+        return "PUBLIC - SIN SEGURIDAD";
+    }
+
     @GetMapping
     public ResponseEntity<List<SolicitudDto>> getSolicitudes(){
         var response = service.getAllSolicitudes();
-        return ResponseEntity.status(HttpStatus.FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/{idSolicitud}")
     public ResponseEntity<SolicitudDto> getSolicitudPorId(@PathVariable Long idSolicitud){
         var response = service.getSolicitud(idSolicitud);
-        return ResponseEntity.status(HttpStatus.FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/{idSolicitud}")

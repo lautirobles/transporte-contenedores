@@ -18,9 +18,9 @@ public class SecurityConfig {
                 // Permite el acceso a la consola H2 sin autenticación
                 .requestMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
                 // Solo los usuarios con rol OPERADOR pueden acceder a los endpoints de gestión
-                .requestMatchers("/api/gestion/**").hasRole("OPERADOR")
+                // .requestMatchers("/api/gestion/**").hasRole("OPERADOR")
                 // Cualquier otra solicitud (como /actuator) debe estar autenticada, pero sin un rol específico
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
             .oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> {})

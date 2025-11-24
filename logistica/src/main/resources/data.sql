@@ -4,7 +4,7 @@
 -- ##########################
 -- CONTENEDORES
 -- ##########################
-INSERT INTO contenedor (id, peso, volumen, estado, cliente_id) VALUES
+INSERT INTO contenedores (id, peso, volumen, estado, cliente_id) VALUES
 (1, 1000.50, 12.3, 'EN_DEPOSITO', 10),
 (2, 850.00, 10.2, 'EN_VIAJE', 11),
 (3, 1200.75, 15.0, 'ENTREGADO', 12);
@@ -13,14 +13,14 @@ INSERT INTO contenedor (id, peso, volumen, estado, cliente_id) VALUES
 -- ##########################
 -- RUTAS
 -- ##########################
-INSERT INTO ruta (id, cantidad_tramos, cantidad_depositos) VALUES
+INSERT INTO rutas (id, cantidad_tramos, cantidad_depositos) VALUES
 (1, 3, 2),
 (2, 2, 1);
 
 -- ##########################
 -- TRAMOS
 -- ##########################
-INSERT INTO tramo (
+INSERT INTO tramos (
     id_tramo, origen, destino, tipo, estado,
     costo_aproximado, costo_real,
     fecha_hora_inicio_estimada, fecha_hora_fin_estimada,
@@ -63,7 +63,7 @@ INSERT INTO tramo (
 -- ##########################
 -- SOLICITUD
 -- ##########################
-INSERT INTO solicitud (
+INSERT INTO solicitudes (
     numero, contenedor_id, cliente_id, estado,
     ruta_id, costo_estimado, tiempo_estimado,
     costo_final, tiempo_real
@@ -76,7 +76,7 @@ INSERT INTO solicitud (
 -- ##########################
 -- ESTADIA
 -- ##########################
-INSERT INTO estadia (
+INSERT INTO estadias (
     id, deposito_id, contenedor_id, fecha_ingreso, fecha_salida
 ) VALUES
 (1, 101, 1, '2025-01-05 10:00:00', '2025-01-08 08:30:00'),
@@ -87,7 +87,7 @@ INSERT INTO estadia (
 -- ##########################
 -- CAMBIO ESTADO
 -- ##########################
-INSERT INTO cambio_estado (
+INSERT INTO cambios_estado (
     id, contenedor_id, estado_anterior, estado_nuevo, fecha_cambio
 ) VALUES
 (1, 1, 'EN_DEPOSITO', 'EN_VIAJE', '2025-01-09 07:45:00'),

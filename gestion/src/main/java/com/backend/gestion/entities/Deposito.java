@@ -1,9 +1,10 @@
 package com.backend.gestion.entities;
 
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 // import java.time.LocalDateTime;
 // import java.util.ArrayList;
 // import java.util.List;
@@ -28,8 +29,8 @@ public class Deposito {
 
     private String nombre;
     private String direccion;
-    private String coordenadas;
-
+    private BigDecimal latitud;
+    private BigDecimal longitud;
     // @OneToMany(mappedBy = "deposito", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonIgnore
     // private List<Estadia> estadias = new ArrayList<>();

@@ -30,3 +30,5 @@ COPY --from=build /app/target/*.jar app.jar
 
 # El comando para ejecutar la aplicación cuando el contenedor se inicie.
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# modificacion para q compile je

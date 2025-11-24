@@ -25,6 +25,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="razon_social")
     private String razonSocial; // razon_social
     private String cuil;
     private Long numero; // puede ser telefono o numero de cliente

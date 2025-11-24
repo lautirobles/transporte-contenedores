@@ -1,4 +1,4 @@
-package com.backend.api_gateway.api_gateway.config;
+package com.backend.apigateway.config; 
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,20 +8,22 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableWebFluxSecurity
+@EnableWebFluxSecurity 
 public class ApiGatewaySecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
+            // Deshabilitar CSRF (No se usa en APIs REST)
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            
+            // Autorizar rutas
             .authorizeExchange(exchanges -> exchanges
-                // Los endpoints que no están cubiertos por las reglas de los microservicios
-                // deben estar autenticados, excepto los públicos (como la documentación).
-                .pathMatchers("/actuator/**").permitAll() // Generalmente permitimos acceso al health check
-                .anyExchange().authenticated() // Todas las demás peticiones deben tener un token válido
+                .pathMatchers("/actuator/**").permitAll()
+                .anyExchange().authenticated() // <--- Aquí está tu "permitir todo" para desarrollo
             )
-            // Configura el Gateway como un servidor de recursos (valida el JWT)
+            
+            // Validación de Token (Resource Server)
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
         return http.build();
