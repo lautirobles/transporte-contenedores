@@ -20,7 +20,13 @@ import java.util.stream.Collectors;
 
 import com.backend.logistica.mapper.SolicitudMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.backend.logistica.clients.ClientesClient;
+import com.backend.logistica.entities.dto.ClienteDTO;
+import com.backend.logistica.entities.Contenedor;
+
 
 
 @Service
@@ -99,5 +105,44 @@ public class SolicitudServiceImpl implements SolicitudService {
         }
 
 
+    }
+
+    // crear solicitud con id cliente como requestParam y validar existencia del cliente via restclient, si no existe crearlo en gestion y luego
+    // asignarlo a la solicitud. tambien recibe id contenedor para crearlo y asignarlo a la solicitud.
+
+    @Autowired
+    private ClientesClient clientesClient;
+
+    @Override
+    public SolicitudDto createSolicitudConClienteYContenedor(SolicitudDto dto) {
+        // Validar existencia del cliente via RestClient
+        ClienteDTO clienteDTO;
+        try {
+            // Si existe, obtener el cliente
+            clienteDTO = clientesClient.obtenerPorId(dto.getClienteId());
+        } catch (NoSuchElementException e) {
+            // Si no existe, crear el cliente en el servicio de gestion con restclient POST 
+
+
+            // Cliente nuevoCliente = new Cliente();
+            // nuevoCliente.setRazonSocial(dto.getRazonSocial());
+            // nuevoCliente.setCuil(dto.getCuil());
+            // nuevoCliente.setNumero(dto.getClienteId());
+            // clienteDTO = clientesClient.crearCliente(nuevoCliente);
+        }
+
+        // Crear y asignar el contenedor
+        Contenedor contenedor = new Contenedor();
+        contenedor.setTipo(dto.getContenedorTipo());
+        contenedor.setCapacidad(dto.getContenedorCapacidad());
+        contenedorRepository.save(contenedor);
+
+        // Crear la solicitud y asignar el cliente y contenedor
+        Solicitud solicitud = SolicitudMapper.dtoToEntity(dto);
+        solicitud.setClienteId(clienteDTO.getId());
+        solicitud.setContenedor(contenedor);
+        solicitudRepository.save(solicitud);
+
+        return SolicitudMapper.entityToDto(solicitud);
     }
 }

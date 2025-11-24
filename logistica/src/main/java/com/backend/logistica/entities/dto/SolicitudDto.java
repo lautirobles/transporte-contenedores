@@ -18,4 +18,17 @@ public class SolicitudDto {
     private Integer tiempoEstimado;
     private BigDecimal costoFinal;
     private Integer tiempoReal;
+
+    
+    // getClienteId
+    public Long getClienteId() {
+        return cliente;
+    }
+
+
+    // getContenedorId
+    public Long getContenedorId() {
+        return contenedor;
+    }
+
 }

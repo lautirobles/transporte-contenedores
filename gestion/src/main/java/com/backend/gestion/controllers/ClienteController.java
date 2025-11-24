@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 
 @RestController
-@RequestMapping("/api/v1/gestion/cliente")
+@RequestMapping("/api/v1/gestion/clientes")
 public class ClienteController {
     
     @Autowired
@@ -49,5 +49,8 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> getClienteById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getClienteById(id));
+    }
 }
