@@ -30,6 +30,12 @@ import com.backend.logistica.entities.Contenedor;
 import com.backend.logistica.entities.dto.ContenedorDto;
 import com.backend.logistica.mapper.ContenedorMapper;
 
+/////////////////////////////////////////////////////////////////////////////////// 
+import com.backend.logistica.repositories.CambioEstadoRepositoryImpl;
+import com.backend.logistica.entities.CambioEstado;
+import com.backend.logistica.entities.dto.SeguimientoSolicitudDto;
+import com.backend.logistica.entities.dto.HistorialEstadoDto;
+import java.util.ArrayList;
 
 
 @Service
@@ -39,6 +45,8 @@ public class SolicitudServiceImpl implements SolicitudService {
     private final SolicitudRepositoryImpl solicitudRepository;
     private final RutaRepositoryImpl rutaRepository;
     private final ContenedorRepositoryImpl contenedorRepository;
+    // Inyectar el repositorio de cambios de estado
+    private final CambioEstadoRepositoryImpl cambioEstadoRepository;
 
     @Override
     public List<SolicitudDto> getAllSolicitudes(){
@@ -182,5 +190,41 @@ public class SolicitudServiceImpl implements SolicitudService {
         solicitudRepository.save(solicitud);
 
         return SolicitudMapper.entityToDto(solicitud, clienteDTO, contenedor);
+    }
+
+
+    ///////////// seguimiento de solicitud ////////////////
+    @Override
+    public SeguimientoSolicitudDto obtenerSeguimiento(Long numero) {
+        // 1. Buscar la solicitud
+        Solicitud solicitud = solicitudRepository.findById(numero)
+            .orElseThrow(() -> new NoSuchElementException("No se encontró la solicitud con id: " + numero));
+
+        // 2. Obtener el historial del contenedor asociado
+        List<HistorialEstadoDto> historialDto = new ArrayList<>();
+        
+        if (solicitud.getContenedor() != null) {
+            List<CambioEstado> cambios = cambioEstadoRepository
+                .findByContenedorOrderByFechaCambioDesc(solicitud.getContenedor());
+            
+            // Mapear entidades a DTOs
+            historialDto = cambios.stream()
+                .map(c -> HistorialEstadoDto.builder()
+                    .estadoAnterior(c.getEstadoAnterior())
+                    .estadoNuevo(c.getEstadoNuevo())
+                    .fechaCambio(c.getFechaCambio())
+                    .build())
+                .collect(Collectors.toList());
+        }
+
+        // 3. Construir y retornar la respuesta completa
+        return SeguimientoSolicitudDto.builder()
+            .numeroSolicitud(solicitud.getNumero())
+            .estadoActual(solicitud.getEstado()) // El estado actual de la solicitud
+            .contenedorId(solicitud.getContenedor() != null ? solicitud.getContenedor().getId() : null)
+            .costoEstimado(solicitud.getCostoEstimado())
+            .tiempoEstimado(solicitud.getTiempoEstimado())
+            .historialEstados(historialDto)
+            .build();
     }
 }

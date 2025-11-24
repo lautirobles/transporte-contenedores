@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.backend.logistica.entities.dto.SolicitudDto;
 import com.backend.logistica.entities.dto.RutaDto;
+import com.backend.logistica.entities.dto.SeguimientoSolicitudDto;
 import com.backend.logistica.entities.dto.UpdateSolicitudDto;
 import com.backend.logistica.services.interfaces.SolicitudService;
 
@@ -80,6 +81,14 @@ public class SolicitudController {
         @RequestBody SolicitudDto solicitudDto) {
             var response = service.createSolicitudConClienteYContenedor(solicitudDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
+    // Endpoint para seguimiento (Requerimiento: Consultar el estado del transporte)
+    @GetMapping("/{numero}/seguimiento")
+    public ResponseEntity<SeguimientoSolicitudDto> getSeguimiento(@PathVariable Long numero) {
+        SeguimientoSolicitudDto response = service.obtenerSeguimiento(numero);
+        return ResponseEntity.ok(response);
     }
     
 
