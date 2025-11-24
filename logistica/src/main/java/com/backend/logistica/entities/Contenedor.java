@@ -23,7 +23,7 @@ public class Contenedor {
 
     // cliente asociado (cl_asociado)
     // @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @Column(name="cliente_id")
     private Long clienteAsociado;
 
     // Estancias en depósitos

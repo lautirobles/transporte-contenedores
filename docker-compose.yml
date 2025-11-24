@@ -1,4 +1,5 @@
 services:
+<<<<<<< HEAD
   # keycloak:
   #   image: quay.io/keycloak/keycloak:latest
   #   container_name: keycloak
@@ -12,6 +13,32 @@ services:
   #     - keycloak_data:/opt/keycloak/data
   #   networks:
   #     - transporte-net
+=======
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    command: start-dev
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      # - KC_HOSTNAME=localhost
+      - KC_HTTP_ENABLED=true 
+      # Dice a Keycloak: "No fuerces un nombre de host fijo, usa el que viene en la petición"
+      - KC_HOSTNAME_STRICT=false 
+      - KC_HOSTNAME_STRICT_HTTPS=false
+    ports:
+      - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    networks:
+      - transporte-net
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080;echo -e \"GET /realms/master HTTP/1.1\r\nhost: localhost\r\nConnection: close\r\n\r\n\" >&3;cat <&3 | grep -q \"HTTP/1.1 200 OK\""]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+>>>>>>> f942ea19a1b5d8a7c29a86b4630021d103519b2f
 
   gestion:
     build: ./gestion
@@ -22,6 +49,8 @@ services:
     #   - keycloak
     networks:
       - transporte-net
+    # volumes:
+      # - ./gestion-data:/app/data
 
   logistica:
     build: ./logistica
@@ -32,7 +61,10 @@ services:
     #   - keycloak
     networks:
       - transporte-net
+    # volumes:
+      # - ./logistica-data:/app/data
 
+<<<<<<< HEAD
   # api-gateway:
   #   build: ./api-gateway
   #   container_name: api-gateway-service
@@ -72,6 +104,31 @@ services:
   #   volumes:
   #     - ./osrm-data:/data
   #   # No necesita command porque está en el CMD del Dockerfile
+=======
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      gestion:
+        condition: service_started
+      logistica:
+        condition: service_started
+      keycloak:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=DEBUG
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY_OAUTH2=DEBUG
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_GATEWAY=DEBUG
+      - LOGGING_LEVEL_ROOT=INFO
+      # Asegurar conexión a Keycloak
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/tpi-backend/protocol/openid-connect/certs
+    networks:
+      - transporte-net
+    
+>>>>>>> f942ea19a1b5d8a7c29a86b4630021d103519b2f
 
 volumes:
   keycloak_data:

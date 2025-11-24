@@ -26,7 +26,7 @@ public class Solicitud {
 
     // FK a cliente
     // @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @Column(name = "cliente_id")
     private Long cliente;
 
     private String estado;
