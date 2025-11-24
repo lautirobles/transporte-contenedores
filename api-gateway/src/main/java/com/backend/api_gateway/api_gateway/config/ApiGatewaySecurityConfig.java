@@ -19,10 +19,8 @@ public class ApiGatewaySecurityConfig {
                 // Los endpoints que no están cubiertos por las reglas de los microservicios
                 // deben estar autenticados, excepto los públicos (como la documentación).
                 .pathMatchers("/actuator/**").permitAll() // Generalmente permitimos acceso al health check
-                .anyExchange().authenticated() // Todas las demás peticiones deben tener un token válido
-            )
-            // Configura el Gateway como un servidor de recursos (valida el JWT)
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+                .anyExchange().permitAll() // Permitimos todo para pruebas
+            );
 
         return http.build();
     }

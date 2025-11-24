@@ -1,25 +1,25 @@
 services:
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    container_name: keycloak
-    command: start-dev
-    environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-    ports:
-      - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
-    volumes:
-      - keycloak_data:/opt/keycloak/data
-    networks:
-      - transporte-net
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:latest
+  #   container_name: keycloak
+  #   command: start-dev
+  #   environment:
+  #     - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+  #     - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+  #   ports:
+  #     - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
+  #   volumes:
+  #     - keycloak_data:/opt/keycloak/data
+  #   networks:
+  #     - transporte-net
 
   gestion:
     build: ./gestion
     container_name: gestion-service
     ports:
       - "8081:8081"
-    depends_on:
-      - keycloak
+    # depends_on:
+    #   - keycloak
     networks:
       - transporte-net
 
@@ -28,42 +28,32 @@ services:
     container_name: logistica-service
     ports:
       - "8082:8082"
-    depends_on:
-      - keycloak
+    # depends_on:
+    #   - keycloak
     networks:
       - transporte-net
 
-  api-gateway:
-    build: ./api-gateway
-    container_name: api-gateway-service
-    ports:
-      - "8080:8080"
-    depends_on:
-      - gestion
-      - logistica
-    networks:
-      - transporte-net
+  # api-gateway:
+  #   build: ./api-gateway
+  #   container_name: api-gateway-service
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - gestion
+  #     - logistica
+  #   networks:
+  #     - transporte-net
 
-<<<<<<< HEAD
   osrm:
-    image: ghcr.io/project-osrm/osrm-backend:latest
-    # platform: linux/arm64 # Descomentar solo si usas una Mac con chip M1/M2
+    image: ghcr.io/project-osrm/osrm-backend:v5.27.1
+  #   # platform: linux/arm64
     container_name: osrm
     ports:
     - "5000:5000"
     volumes:
     - ./osrm-data:/data
-    command: osrm-routed /data/argentina-251117.osrm # Asegúrate de que este nombre coincida con tu archivo
-=======
-  # osrm:
-  #   image: ghcr.io/project-osrm/osrm-backend:v5.27.1
-  # #   # platform: linux/arm64
-  #   container_name: osrm
-  #   ports:
-  #   - "5000:5000"
-  #   volumes:
-  #   - ./osrm-data:/data
-  #   command: osrm-routed --algorithm mld /data/argentina-251117.osrm
+    command: osrm-routed --algorithm mld /data/argentina-251117.osrm
+
   # osrm:
   #   image: osrm/osrm-backend:v5.25.0
   #   container_name: osrm
@@ -82,7 +72,6 @@ services:
   #   volumes:
   #     - ./osrm-data:/data
   #   # No necesita command porque está en el CMD del Dockerfile
->>>>>>> c65d2c8fdd05ae54c3a80d824d58ce0c48bd07e0
 
 volumes:
   keycloak_data:
