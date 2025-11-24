@@ -30,14 +30,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                // Permite el acceso a la consola H2 sin autenticación
-                .requestMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
+                // Permite el acceso a la consola H2 y swagger sin autenticación
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // Un CLIENTE puede crear una solicitud
-                .requestMatchers(HttpMethod.POST, "/api/logistica/solicitud").hasRole("CLIENTE")
+                .requestMatchers(HttpMethod.POST, "/api/v1/logistica/solicitud").hasRole("CLIENTE")
                 // Un OPERADOR puede ver todas las solicitudes
-                .requestMatchers(HttpMethod.GET, "/api/logistica/solicitud/**").hasRole("OPERADOR")
+                .requestMatchers(HttpMethod.GET, "/api/v1/logistica/solicitud/**").hasRole("OPERADOR")
                 // Un TRANSPORTISTA puede actualizar una solicitud
-                .requestMatchers(HttpMethod.PATCH, "/api/logistica/solicitud/**").hasRole("TRANSPORTISTA")
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/logistica/solicitud/**").hasRole("OPERADOR")
                 // Cualquier otra solicitud (como /actuator) debe estar autenticada
                 .anyRequest().authenticated()
             )
@@ -74,13 +75,12 @@ class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAut
         
         final Map<String, Object> realmAccess = (Map<String, Object>) jwt.getClaims().get("realm_access");
 
-        // Validar si realm_access existe
+        
         if (realmAccess == null || realmAccess.isEmpty()) {
             logger.warn("El token NO tiene 'realm_access'");
             return Set.of();
         }
 
-        // Validar si roles existe (¡Aquí podía estar el error!)
         @SuppressWarnings("unchecked")
         final Collection<String> roles = (Collection<String>) realmAccess.get("roles");
 

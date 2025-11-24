@@ -1,5 +1,8 @@
 package com.backend.logistica.mapper;
 
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.backend.logistica.entities.Ruta;
@@ -25,7 +28,12 @@ public class RutaMapper {
         return new RutaDto(
             ruta.getId(),
             ruta.getCantidadTramos(),
-            ruta.getCantidadDepositos()
+            ruta.getCantidadDepositos(),
+            ruta.getTramos() != null ? 
+                ruta.getTramos().stream()
+                    .map(TramoMapper::entityToDto) 
+                    .collect(Collectors.toList()) 
+                : Collections.emptyList()
         );
     }
 }

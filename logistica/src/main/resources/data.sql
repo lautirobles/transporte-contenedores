@@ -15,7 +15,9 @@ INSERT INTO contenedores (id, peso, volumen, estado, cliente_id) VALUES
 -- ##########################
 INSERT INTO rutas (id, cantidad_tramos, cantidad_depositos) VALUES
 (1, 3, 2),
-(2, 2, 1);
+(2, 2, 1),
+(3, 2, 1),
+(4, 2, 1);
 
 -- ##########################
 -- TRAMOS
@@ -34,13 +36,13 @@ INSERT INTO tramos (
  '2025-01-10 08:15:00', '2025-01-10 14:10:00',
  21, 1),
 
-(2, 'Rosario', 'Córdoba', 'TERRESTRE', 'COMPLETADO',
+(2, 'Rosario', 'Cordoba', 'TERRESTRE', 'COMPLETADO',
  4000, 4100,
  '2025-01-11 09:00:00', '2025-01-11 16:00:00',
  '2025-01-11 09:05:00', '2025-01-11 16:20:00',
  22, 1),
 
-(3, 'Córdoba', 'Mendoza', 'TERRESTRE', 'PENDIENTE',
+(3, 'Cordoba', 'Mendoza', 'TERRESTRE', 'PENDIENTE',
  6000, NULL,
  '2025-01-12 07:00:00', '2025-01-12 15:00:00',
  NULL, NULL,
@@ -57,8 +59,31 @@ INSERT INTO tramos (
  3500, NULL,
  '2025-02-02 08:00:00', '2025-02-02 14:00:00',
  '2025-02-02 08:20:00', NULL,
- 25, 2);
+ 25, 2),
 
+(6, 'Cordoba', 'Rosario', 'TERRESTRE', 'PENDIENTE',
+ 6000, NULL,
+ '2025-01-12 07:00:00', '2025-01-12 15:00:00',
+ NULL, NULL,
+ NULL, 3),
+
+(7, 'Rosario', 'Buenos Aires', 'TERRESTRE', 'PENDIENTE',
+ 6000, NULL,
+ '2025-01-12 16:00:00', '2025-01-13 01:00:00',
+ NULL, NULL,
+ NULL, 3),
+
+(8, 'Cordoba', 'Santa Rosa de la Pampa', 'TERRESTRE', 'PENDIENTE',
+ 6000, NULL,
+ '2025-01-12 07:00:00', '2025-01-12 17:00:00',
+ NULL, NULL,
+ NULL, 4),
+
+ (9, 'Santa Rosa de la Pampa', 'Buenos Aires', 'TERRESTRE', 'PENDIENTE',
+ 6000, NULL,
+ '2025-01-13 03:00:00', '2025-01-12 12:00:00',
+ NULL, NULL,
+ NULL, 4);
 
 -- ##########################
 -- SOLICITUD

@@ -12,7 +12,6 @@ import com.backend.logistica.entities.Solicitud;
 import com.backend.logistica.entities.dto.RutaDto;
 import com.backend.logistica.entities.dto.SolicitudDto;
 import com.backend.logistica.entities.dto.UpdateSolicitudDto;
-import com.backend.logistica.mapper.RutaMapper;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -82,12 +81,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     @Override
     public void updateRutaAsignadaSolicitud(Long numero, RutaDto rutaAsignada){
         Solicitud solicitud = solicitudRepository.findById(numero).orElseThrow(()-> new NoSuchElementException("No se encontro solicitud con ese id"));
-        if(solicitud != null){
-            Ruta ruta = RutaMapper.dtoToEntity(rutaAsignada);
-            solicitud.setRutaAsignada(ruta);
-            solicitudRepository.save(solicitud);
-        }
-       
+        Ruta ruta = rutaRepository.findById(rutaAsignada.getId()).orElse(null);
+        solicitud.setRutaAsignada(ruta);
+        solicitudRepository.save(solicitud);
+    
     }
 
     @Override

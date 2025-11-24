@@ -20,7 +20,14 @@ public class ApiGatewaySecurityConfig {
             // Autorizar rutas
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/actuator/**").permitAll()
-                .anyExchange().authenticated() // <--- Aquí está tu "permitir todo" para desarrollo
+                .pathMatchers(
+                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                ).permitAll()
+                .anyExchange().authenticated() 
             )
             
             // Validación de Token (Resource Server)

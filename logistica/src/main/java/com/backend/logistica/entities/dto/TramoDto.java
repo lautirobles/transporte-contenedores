@@ -14,8 +14,8 @@ public class TramoDto {
     private String destino;
     private String tipo;
     private String estado;
-    private double costoAproximado;
-    private double costoReal;
+    private Double costoAproximado;
+    private Double costoReal;
     private LocalDateTime fechaHoraInicioEstimada;
     private LocalDateTime fechaHoraFinEstimada;
     private LocalDateTime fechaHoraInicioReal;

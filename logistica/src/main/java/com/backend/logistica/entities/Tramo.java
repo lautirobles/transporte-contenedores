@@ -2,7 +2,6 @@ package com.backend.logistica.entities;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
@@ -26,9 +25,9 @@ public class Tramo {
     private String estado;
 
     @Column(name="costo_aproximado")
-    private double costoAproximado;
+    private Double costoAproximado;
     @Column(name="costo_real")
-    private double costoReal;
+    private Double costoReal;
 
     @Column(name="fecha_hora_inicio_estimada")
     private LocalDateTime fechaHoraInicioEstimada;
@@ -47,5 +46,7 @@ public class Tramo {
     // Ruta a la que pertenece el tramo
     @ManyToOne
     @JoinColumn(name = "ruta_id")
+    @ToString.Exclude            
+    @EqualsAndHashCode.Exclude
     private Ruta ruta;
 }

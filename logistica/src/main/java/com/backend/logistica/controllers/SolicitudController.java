@@ -44,6 +44,7 @@ public class SolicitudController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    // endpoint para actualizar el costo final y la fecha
     @PatchMapping("/{idSolicitud}")
     public ResponseEntity<Void> updateFechaCostoFecha(
         @PathVariable Long idSolicitud,
@@ -53,6 +54,7 @@ public class SolicitudController {
         return ResponseEntity.ok(null);
     }
 
+    // asignar ruta a la solicitud
     @PatchMapping("/{idSolicitud}/ruta-asignada")
     public ResponseEntity<Void> updateRutaAsignada(
         @PathVariable Long idSolicitud,
