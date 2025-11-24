@@ -30,14 +30,16 @@ public class TramoController {
         return ResponseEntity.ok(response);
     }
 
+    // cambiar estado del tramo
     @PatchMapping("/{idTramo}/estado")
     public ResponseEntity<Void> updateEstadoTramo(@PathVariable Long idTramo, @RequestBody String estado){
         service.updateEstadoTramo(idTramo, estado);
         return ResponseEntity.ok(null);
     }
 
-    @PatchMapping("/{idTramo}/camion")
-    public ResponseEntity<Void> updateCamionTramo(@PathVariable Long idTramo, @RequestBody Long idCamion){
+    // asignar camion a un tramo
+    @PatchMapping("/{idTramo}/camion/{idCamion}")
+    public ResponseEntity<Void> updateCamionTramo(@PathVariable Long idTramo, @PathVariable Long idCamion){
         service.updateCamion(idTramo, idCamion);
         return ResponseEntity.ok(null);
     }

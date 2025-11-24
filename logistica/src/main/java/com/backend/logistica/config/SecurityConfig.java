@@ -37,10 +37,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/v1/logistica/solicitud").hasRole("CLIENTE")
                 // Un OPERADOR puede ver todas las solicitudes
                 .requestMatchers(HttpMethod.GET, "/api/v1/logistica/solicitud/**").hasRole("OPERADOR")
-                // Un TRANSPORTISTA puede actualizar una solicitud
+                // Un OPERADOR puede actualizar una solicitud
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/logistica/solicitud/**").hasRole("OPERADOR")
+                
                 .requestMatchers(HttpMethod.GET, "/api/v1/logistica/solicitud/*/seguimiento").hasRole("CLIENTE")
                 
+                .requestMatchers(HttpMethod.GET, "/api/v1/logistica/ruta/rutas-tentativas").hasRole("OPERADOR")
+
+
+
                 // Cualquier otra solicitud (como /actuator) debe estar autenticada
                 .anyRequest().authenticated()
             )

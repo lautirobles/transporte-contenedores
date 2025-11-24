@@ -5,9 +5,9 @@
 -- CONTENEDORES
 -- ##########################
 INSERT INTO contenedores (id, peso, volumen, estado, cliente_id) VALUES
-(1, 1000.50, 12.3, 'EN_DEPOSITO', 10),
-(2, 850.00, 10.2, 'EN_VIAJE', 11),
-(3, 1200.75, 15.0, 'ENTREGADO', 12);
+(1, 1000.50, 12.3, 'EN_DEPOSITO', 1),
+(2, 850.00, 10.2, 'EN_VIAJE', 2),
+(3, 1200.75, 15.0, 'ENTREGADO', 3);
 
 
 -- ##########################
@@ -93,9 +93,9 @@ INSERT INTO solicitudes (
     ruta_id, costo_estimado, tiempo_estimado,
     costo_final, tiempo_real
 ) VALUES
-(1001, 1, 10, 'EN_PROCESO', 1, 15000, 1800, NULL, NULL),
-(1002, 2, 11, 'COMPLETADA', 2, 9000, 900, 9200, 940),
-(1003, 3, 12, 'PENDIENTE', NULL, 5000, 600, NULL, NULL);
+(1001, 1, 1, 'EN_PROCESO', 1, 15000, 1800, NULL, NULL),
+(1002, 2, 2, 'COMPLETADA', 2, 9000, 900, 9200, 940),
+(1003, 3, 3, 'PENDIENTE', NULL, 5000, 600, NULL, NULL);
 
 
 -- ##########################

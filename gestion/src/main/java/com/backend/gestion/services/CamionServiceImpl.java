@@ -23,6 +23,11 @@ public class CamionServiceImpl implements CamionService {
     }
 
     @Override
+    public Camion getCamionPorId(Long id){
+        return camionRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Camion createCamion(Camion camion) {
         return camionRepository.save(camion);
     }

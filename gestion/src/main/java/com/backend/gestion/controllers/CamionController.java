@@ -29,6 +29,11 @@ public class CamionController {
     public ResponseEntity<List<Camion>> getAllCamiones() {
         return ResponseEntity.ok(service.getAllCamiones());
     }
+
+    @GetMapping("/{idCamion}")
+    public ResponseEntity<Camion> getCamionPorId(@PathVariable Long idCamion){
+        return ResponseEntity.ok(service.getCamionPorId(idCamion));
+    }
     
     @PostMapping
     public ResponseEntity<Camion> createCamion(@RequestBody Camion camion) {

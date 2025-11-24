@@ -13,7 +13,6 @@ import com.backend.logistica.entities.dto.RutaDto;
 import com.backend.logistica.entities.dto.SolicitudDto;
 import com.backend.logistica.entities.dto.UpdateSolicitudDto;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -27,7 +26,6 @@ import com.backend.logistica.clients.ClientesClient;
 import com.backend.logistica.entities.dto.ClienteDTO;
 import com.backend.logistica.entities.Contenedor;
 import com.backend.logistica.entities.dto.ContenedorDto;
-import com.backend.logistica.mapper.ContenedorMapper;
 
 /////////////////////////////////////////////////////////////////////////////////// 
 import com.backend.logistica.repositories.CambioEstadoRepositoryImpl;
@@ -44,8 +42,11 @@ public class SolicitudServiceImpl implements SolicitudService {
     private final SolicitudRepositoryImpl solicitudRepository;
     private final RutaRepositoryImpl rutaRepository;
     private final ContenedorRepositoryImpl contenedorRepository;
-    // Inyectar el repositorio de cambios de estado
+    
     private final CambioEstadoRepositoryImpl cambioEstadoRepository;
+    
+    @Autowired
+    private ClientesClient clientesClient;
 
     @Override
     public List<SolicitudDto> getAllSolicitudes(){
@@ -57,8 +58,7 @@ public class SolicitudServiceImpl implements SolicitudService {
                 Contenedor contenedor = solicitud.getContenedor();
                 return SolicitudMapper.entityToDto(solicitud, clienteDTO, contenedor);
             } catch (Exception e) {
-                // Manejar el caso en que un cliente no se encuentre, o retornar null/lanzar excepción.
-                // Aquí simplemente lo omitimos de la lista.
+                System.out.println("⚠️ ERROR al procesar solicitud: " + e.getMessage());
                 return null;
             }
         }).filter(dto -> dto != null).collect(Collectors.toList());
@@ -149,9 +149,6 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // crear solicitud con id cliente como requestParam y validar existencia del cliente via restclient, si no existe crearlo en gestion y luego
     // asignarlo a la solicitud. tambien recibe id contenedor para crearlo y asignarlo a la solicitud.
-
-    @Autowired
-    private ClientesClient clientesClient;
 
     @Override
     public SolicitudDto createSolicitudConClienteYContenedor(SolicitudDto dto) {
