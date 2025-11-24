@@ -16,6 +16,7 @@ public class ClientesClient {
     private final RestClient clientesClient;
 
     //restclient obtener todos los clientes y validar existencia por id
+
     public ClienteDTO obtenerPorId(Long id) {
         try {
 
@@ -33,5 +34,26 @@ public class ClientesClient {
             throw new RuntimeException("Error al comunicarse con el servicio de clientes: " + ex.getMessage());
         }
     }
+
+    // restclient para crear cliente
+    public ClienteDTO crear(ClienteDTO cliente) {
+        try {
+            return clientesClient.post()
+                .uri("/api/v1/clientes")
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
+                    throw new RuntimeException("Error al crear cliente: " + cliente);
+                })
+                .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
+                    throw new RuntimeException("Error del servidor al crear cliente: " + cliente);
+                })
+                .body(ClienteDTO.class);
+        } catch (RestClientResponseException ex) {
+            throw new RuntimeException("Error al comunicarse con el servicio de clientes: " + ex.getMessage());
+        }
+    }
+
+
+
     
 }

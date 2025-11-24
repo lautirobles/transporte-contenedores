@@ -49,4 +49,20 @@ public class Tramo {
     @ToString.Exclude            
     @EqualsAndHashCode.Exclude
     private Ruta ruta;
+
+    // calcular duración estimada en horas
+    public long calcularDuracionEstimadaHoras() {
+        if (fechaHoraInicioEstimada != null && fechaHoraFinEstimada != null) {
+            return java.time.Duration.between(fechaHoraInicioEstimada, fechaHoraFinEstimada).toHours();
+        }
+        return 0;
+    }
+
+    // calcular duración real en horas
+    public long calcularDuracionRealHoras() {
+        if (fechaHoraInicioReal != null && fechaHoraFinReal != null) {
+            return java.time.Duration.between(fechaHoraInicioReal, fechaHoraFinReal).toHours();
+        }
+        return 0;
+    }
 }

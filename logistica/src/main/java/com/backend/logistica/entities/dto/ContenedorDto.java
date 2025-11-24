@@ -15,4 +15,9 @@ public class ContenedorDto {
     private String estado;
 
     private Long clienteAsociado;
+
+    // getId
+    public Long getId() {
+        return id;
+    }
 }

@@ -29,8 +29,8 @@ services:
     container_name: gestion-service
     ports:
       - "8081:8081"
-    depends_on:
-      - keycloak
+    # depends_on:
+    #   - keycloak
     networks:
       - transporte-net
     # volumes:
@@ -41,8 +41,8 @@ services:
     container_name: logistica-service
     ports:
       - "8082:8082"
-    depends_on:
-      - keycloak
+    # depends_on:
+    #   - keycloak
     networks:
       - transporte-net
     # volumes:
