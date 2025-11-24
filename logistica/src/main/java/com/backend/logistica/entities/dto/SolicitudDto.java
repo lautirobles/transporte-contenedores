@@ -10,8 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 public class SolicitudDto {
     private Long numero;
-    private Long contenedor;
-    private Long cliente;
+    private ContenedorDto contenedor;
+    private ClienteDTO cliente;
     private String estado;
     private Long rutaAsignada;
     private BigDecimal costoEstimado;
@@ -22,13 +22,26 @@ public class SolicitudDto {
     
     // getClienteId
     public Long getClienteId() {
-        return cliente;
+        return cliente.getId();
     }
 
 
     // getContenedorId
     public Long getContenedorId() {
-        return contenedor;
+        return contenedor.getId();
     }
+
+    // getPeso
+    public BigDecimal getPeso() {
+        return contenedor.getPeso();
+    }
+
+    // getVolumen
+    public BigDecimal getVolumen() {
+        return contenedor.getVolumen();
+    }
+
+
+
 
 }

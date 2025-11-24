@@ -70,5 +70,17 @@ public class SolicitudController {
             return ResponseEntity.ok(response);
     }
     
+    /**
+     * Endpoint para crear una solicitud completa.
+     * Valida si el cliente existe; si no, lo crea.
+     * Siempre crea un nuevo contenedor asociado a la solicitud.
+     */
+    @PostMapping("/completa")
+    public ResponseEntity<SolicitudDto> createSolicitudCompleta(
+        @RequestBody SolicitudDto solicitudDto) {
+            var response = service.createSolicitudConClienteYContenedor(solicitudDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    
 
 }

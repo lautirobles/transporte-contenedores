@@ -24,4 +24,6 @@ public interface SolicitudService {
     void updateRutaAsignadaSolicitud(Long numero, RutaDto ruta);
 
     void deleteSolicitud(Long numero);
+
+    SolicitudDto createSolicitudConClienteYContenedor(SolicitudDto dto);
 }

@@ -14,6 +14,7 @@ import com.backend.logistica.entities.dto.SolicitudDto;
 import com.backend.logistica.entities.dto.UpdateSolicitudDto;
 import com.backend.logistica.mapper.RutaMapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Service;
 import com.backend.logistica.clients.ClientesClient;
 import com.backend.logistica.entities.dto.ClienteDTO;
 import com.backend.logistica.entities.Contenedor;
+import com.backend.logistica.entities.dto.ContenedorDto;
+import com.backend.logistica.mapper.ContenedorMapper;
 
 
 
@@ -39,38 +42,70 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     @Override
     public List<SolicitudDto> getAllSolicitudes(){
-        return solicitudRepository.findAll().stream()
-                    .map(SolicitudMapper::entityToDto)
-                    .collect(Collectors.toList());
+        List<Solicitud> solicitudes = solicitudRepository.findAll();
+        // Para cada solicitud, debemos obtener su cliente y contenedor para poder mapearla a DTO.
+        return solicitudes.stream().map(solicitud -> {
+            try {
+                ClienteDTO clienteDTO = clientesClient.obtenerPorId(solicitud.getCliente());
+                Contenedor contenedor = solicitud.getContenedor();
+                return SolicitudMapper.entityToDto(solicitud, clienteDTO, contenedor);
+            } catch (Exception e) {
+                // Manejar el caso en que un cliente no se encuentre, o retornar null/lanzar excepción.
+                // Aquí simplemente lo omitimos de la lista.
+                return null;
+            }
+        }).filter(dto -> dto != null).collect(Collectors.toList());
     }
 
     @Override
     public SolicitudDto getSolicitud(Long numero){
-        return SolicitudMapper.entityToDto(solicitudRepository.findById(numero).orElse(null));    
+        Solicitud solicitud = solicitudRepository.findById(numero)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró solicitud con id: " + numero));
+
+        // Obtenemos los datos adicionales necesarios para el mapper
+        ClienteDTO clienteDTO = clientesClient.obtenerPorId(solicitud.getCliente());
+        Contenedor contenedor = solicitud.getContenedor();
+
+        return SolicitudMapper.entityToDto(solicitud, clienteDTO, contenedor);
     }
 
     @Override
     public SolicitudDto createSolicitud(SolicitudDto dto){
         Solicitud solicitud = SolicitudMapper.dtoToEntity(dto);
 
-        // FALTAN VALIDACIONESSSSSS
+        // Validamos y obtenemos el cliente
+        ClienteDTO clienteDTO = clientesClient.obtenerPorId(dto.getClienteId());
 
-        var ruta = rutaRepository.findById(dto.getRutaAsignada()).orElse(null);
-
-        var contenedor = contenedorRepository.findById(dto.getContenedor()).orElse(null);
-
-        solicitud.setRutaAsignada(ruta);
+        // Validamos y obtenemos el contenedor
+        Contenedor contenedor = contenedorRepository.findById(dto.getContenedorId())
+                .orElseThrow(() -> new NoSuchElementException("No se encontró contenedor con id: " + dto.getContenedorId()));
+        
+        // Asignamos las entidades a la solicitud
+        solicitud.setCliente(clienteDTO.getId());
         solicitud.setContenedor(contenedor);
+        
+        // Si viene una ruta, la asignamos
+        if (dto.getRutaAsignada() != null) {
+            Ruta ruta = rutaRepository.findById(dto.getRutaAsignada())
+                    .orElseThrow(() -> new NoSuchElementException("No se encontró ruta con id: " + dto.getRutaAsignada()));
+            solicitud.setRutaAsignada(ruta);
+        }
+
         solicitudRepository.save(solicitud);
-        return SolicitudMapper.entityToDto(solicitud);
+        return SolicitudMapper.entityToDto(solicitud, clienteDTO, contenedor);
     }
 
     @Override
     public SolicitudDto updateSolicitud(Long numero, Solicitud solicitud){
         if(solicitudRepository.existsById(numero)){
             solicitud.setNumero(numero);
-            solicitudRepository.save(solicitud);
-            return SolicitudMapper.entityToDto(solicitud);
+            Solicitud solicitudGuardada = solicitudRepository.save(solicitud);
+
+            // Obtenemos los datos para el DTO
+            ClienteDTO clienteDTO = clientesClient.obtenerPorId(solicitudGuardada.getCliente());
+            Contenedor contenedor = solicitudGuardada.getContenedor();
+
+            return SolicitudMapper.entityToDto(solicitudGuardada, clienteDTO, contenedor);
         }
         return null;
     }
@@ -115,34 +150,37 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     @Override
     public SolicitudDto createSolicitudConClienteYContenedor(SolicitudDto dto) {
+
         // Validar existencia del cliente via RestClient
         ClienteDTO clienteDTO;
         try {
             // Si existe, obtener el cliente
             clienteDTO = clientesClient.obtenerPorId(dto.getClienteId());
         } catch (NoSuchElementException e) {
-            // Si no existe, crear el cliente en el servicio de gestion con restclient POST 
-
-
-            // Cliente nuevoCliente = new Cliente();
-            // nuevoCliente.setRazonSocial(dto.getRazonSocial());
-            // nuevoCliente.setCuil(dto.getCuil());
-            // nuevoCliente.setNumero(dto.getClienteId());
-            // clienteDTO = clientesClient.crearCliente(nuevoCliente);
+            // Si no existe, crearlo usando los datos del DTO de la solicitud.
+            // El clienteDTO viene dentro de SolicitudDto.
+            clienteDTO = clientesClient.crear(dto.getCliente());
         }
 
+
+
         // Crear y asignar el contenedor
+        ContenedorDto contenedorDto = dto.getContenedor();
         Contenedor contenedor = new Contenedor();
-        contenedor.setTipo(dto.getContenedorTipo());
-        contenedor.setCapacidad(dto.getContenedorCapacidad());
+        contenedor.setPeso(contenedorDto.getPeso());
+        contenedor.setVolumen(contenedorDto.getVolumen());
+        contenedor.setEstado("CREADO");
+        // Asociamos el contenedor al ID del cliente (ya sea el que existía o el nuevo)
+        contenedor.setClienteAsociado(clienteDTO.getId());
+
         contenedorRepository.save(contenedor);
 
         // Crear la solicitud y asignar el cliente y contenedor
         Solicitud solicitud = SolicitudMapper.dtoToEntity(dto);
-        solicitud.setClienteId(clienteDTO.getId());
+        solicitud.setCliente(clienteDTO.getId());
         solicitud.setContenedor(contenedor);
         solicitudRepository.save(solicitud);
 
-        return SolicitudMapper.entityToDto(solicitud);
+        return SolicitudMapper.entityToDto(solicitud, clienteDTO, contenedor);
     }
 }

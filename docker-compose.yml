@@ -1,19 +1,4 @@
 services:
-<<<<<<< HEAD
-  # keycloak:
-  #   image: quay.io/keycloak/keycloak:latest
-  #   container_name: keycloak
-  #   command: start-dev
-  #   environment:
-  #     - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-  #     - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-  #   ports:
-  #     - "8888:8080" # Mapea el puerto 8080 del contenedor al 8888 de tu máquina
-  #   volumes:
-  #     - keycloak_data:/opt/keycloak/data
-  #   networks:
-  #     - transporte-net
-=======
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
@@ -38,7 +23,6 @@ services:
       timeout: 5s
       retries: 20
       start_period: 40s
->>>>>>> f942ea19a1b5d8a7c29a86b4630021d103519b2f
 
   gestion:
     build: ./gestion
@@ -64,47 +48,6 @@ services:
     # volumes:
       # - ./logistica-data:/app/data
 
-<<<<<<< HEAD
-  # api-gateway:
-  #   build: ./api-gateway
-  #   container_name: api-gateway-service
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - gestion
-  #     - logistica
-  #   networks:
-  #     - transporte-net
-
-  osrm:
-    image: ghcr.io/project-osrm/osrm-backend:v5.27.1
-  #   # platform: linux/arm64
-    container_name: osrm
-    ports:
-    - "5000:5000"
-    volumes:
-    - ./osrm-data:/data
-    command: osrm-routed --algorithm mld /data/argentina-251117.osrm
-
-  # osrm:
-  #   image: osrm/osrm-backend:v5.25.0
-  #   container_name: osrm
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./osrm-data:/data
-  #   command: osrm-routed --algorithm mld /data/argentina-251117.osrm
-  # 
-  # supuestamente ES EL QUE SIRVE
-  # osrm:
-  #   image: osrm-custom:5.26.0
-  #   container_name: osrm
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./osrm-data:/data
-  #   # No necesita command porque está en el CMD del Dockerfile
-=======
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway-service
@@ -128,7 +71,6 @@ services:
     networks:
       - transporte-net
     
->>>>>>> f942ea19a1b5d8a7c29a86b4630021d103519b2f
 
 volumes:
   keycloak_data:
