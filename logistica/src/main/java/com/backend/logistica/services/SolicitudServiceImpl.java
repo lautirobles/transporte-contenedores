@@ -26,6 +26,7 @@ import com.backend.logistica.clients.ClientesClient;
 import com.backend.logistica.entities.dto.ClienteDTO;
 import com.backend.logistica.entities.Contenedor;
 import com.backend.logistica.entities.dto.ContenedorDto;
+import org.springframework.transaction.annotation.Transactional;
 
 /////////////////////////////////////////////////////////////////////////////////// 
 import com.backend.logistica.repositories.CambioEstadoRepositoryImpl;
@@ -151,37 +152,70 @@ public class SolicitudServiceImpl implements SolicitudService {
     // asignarlo a la solicitud. tambien recibe id contenedor para crearlo y asignarlo a la solicitud.
 
     @Override
+    @Transactional // ¡Descomenta esto para seguridad de datos!
     public SolicitudDto createSolicitudConClienteYContenedor(SolicitudDto dto) {
 
-        // Validar existencia del cliente via RestClient
-        ClienteDTO clienteDTO;
+        // 1. GESTIÓN DEL CLIENTE
+        ClienteDTO clienteDTO = null; // Inicializamos
+        
         try {
-            // Si existe, obtener el cliente
-            clienteDTO = clientesClient.obtenerPorId(dto.getClienteId());
+            // Intentamos buscar por el ID que viene en el JSON
+            if (dto.getCliente() != null && dto.getCliente().getId() != null) {
+                clienteDTO = clientesClient.obtenerPorId(dto.getCliente().getId());
+                
+                // --- CORRECCIÓN CLAVE ---
+                // Si Gestión devuelve 200 OK pero sin cuerpo (null), significa que no existe.
+                if (clienteDTO == null) {
+                    throw new NoSuchElementException("Cliente no encontrado en Gestión (devuelto null)");
+                }
+            } else {
+                throw new NoSuchElementException("ID nulo"); // Forzamos creación
+            }
         } catch (NoSuchElementException e) {
-            // Si no existe, crearlo usando los datos del DTO de la solicitud.
-            // El clienteDTO viene dentro de SolicitudDto.
-            clienteDTO = clientesClient.crear(dto.getCliente());
+            // Si no existe (404 o null), lo creamos.
+            System.out.println("Cliente no encontrado (" + e.getMessage() + "). Creando uno nuevo...");
+            
+            if (dto.getCliente() != null) {
+                ClienteDTO nuevoClienteData = dto.getCliente();
+                nuevoClienteData.setId(null); // IMPORTANTE: ID null para crear
+                clienteDTO = clientesClient.crear(nuevoClienteData);
+            } else {
+                throw new IllegalArgumentException("Faltan datos del cliente para crearlo.");
+            }
         }
 
-
-
-        // Crear y asignar el contenedor
+        // 2. GESTIÓN DEL CONTENEDOR
         ContenedorDto contenedorDto = dto.getContenedor();
+        
         Contenedor contenedor = new Contenedor();
+        contenedor.setId(null); // Forzar creación
         contenedor.setPeso(contenedorDto.getPeso());
         contenedor.setVolumen(contenedorDto.getVolumen());
-        contenedor.setEstado("CREADO");
-        // Asociamos el contenedor al ID del cliente (ya sea el que existía o el nuevo)
-        contenedor.setClienteAsociado(clienteDTO.getId());
+        contenedor.setEstado("EN_DEPOSITO"); 
+        
+        // Ahora clienteDTO SEGURO no es null (o falló antes)
+        contenedor.setClienteAsociado(clienteDTO.getId()); 
 
-        contenedorRepository.save(contenedor);
+        contenedor = contenedorRepository.save(contenedor);
 
-        // Crear la solicitud y asignar el cliente y contenedor
+        // 3. CREACIÓN DE LA SOLICITUD
         Solicitud solicitud = SolicitudMapper.dtoToEntity(dto);
+        
+        solicitud.setNumero(null); // Forzar creación
         solicitud.setCliente(clienteDTO.getId());
         solicitud.setContenedor(contenedor);
-        solicitudRepository.save(solicitud);
+        
+        if (solicitud.getEstado() == null) {
+            solicitud.setEstado("PENDIENTE");
+        }
+
+        // Lógica de Ruta (opcional, si tienes el repositorio inyectado)
+        if (dto.getRutaAsignada() != null) {
+             // Ruta ruta = rutaRepository.findById(dto.getRutaAsignada()).orElse(null);
+             // solicitud.setRutaAsignada(ruta);
+        }
+
+        solicitud = solicitudRepository.save(solicitud);
 
         return SolicitudMapper.entityToDto(solicitud, clienteDTO, contenedor);
     }

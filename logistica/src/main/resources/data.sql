@@ -119,3 +119,9 @@ INSERT INTO cambios_estado (
 (2, 1, 'EN_VIAJE', 'EN_DEPOSITO', '2025-01-12 19:50:00'),
 (3, 2, 'EN_DEPOSITO', 'EN_VIAJE', '2025-02-01 09:10:00'),
 (4, 3, 'EN_VIAJE', 'ENTREGADO', '2025-03-02 18:20:00');
+
+-- Ajustar la secuencia de contenedores para que empiece después del ID 3
+ALTER TABLE contenedores ALTER COLUMN id RESTART WITH 4;
+
+-- Ajustar también la secuencia de solicitudes (ya usaste 1001, 1002, 1003)
+ALTER TABLE solicitudes ALTER COLUMN numero RESTART WITH 1004;
