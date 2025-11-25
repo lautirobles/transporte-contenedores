@@ -184,19 +184,36 @@ public class SolicitudServiceImpl implements SolicitudService {
             }
         }
 
-        // 2. GESTIÓN DEL CONTENEDOR
-        ContenedorDto contenedorDto = dto.getContenedor();
-        
-        Contenedor contenedor = new Contenedor();
-        contenedor.setId(null); // Forzar creación
-        contenedor.setPeso(contenedorDto.getPeso());
-        contenedor.setVolumen(contenedorDto.getVolumen());
-        contenedor.setEstado("EN_DEPOSITO"); 
-        
-        // Ahora clienteDTO SEGURO no es null (o falló antes)
-        contenedor.setClienteAsociado(clienteDTO.getId()); 
+        // // 2. GESTIÓN DEL CONTENEDOR
 
-        contenedor = contenedorRepository.save(contenedor);
+        ContenedorDto contenedorDto = dto.getContenedor();
+        Contenedor contenedor = null;
+
+        // A. Verificamos si se solicita un contenedor específico
+        if (contenedorDto.getId() != null) {
+            contenedor = contenedorRepository.findById(contenedorDto.getId()).orElse(null);
+        }
+
+        // B. Validar existencia y disponibilidad
+        if (contenedor != null) {
+            // Si el contenedor existe, verificamos su estado
+            if (!"EN_DEPOSITO".equalsIgnoreCase(contenedor.getEstado())) {
+                throw new IllegalStateException("El contenedor " + contenedor.getId() + 
+                    " existe pero NO está disponible. Estado actual: " + contenedor.getEstado());
+            }
+            
+        
+        } else {
+            // C. Si no existe (o ID era null), creamos uno NUEVO
+            contenedor = new Contenedor();
+            contenedor.setId(null); // Forzamos null para crear
+            contenedor.setPeso(contenedorDto.getPeso());
+            contenedor.setVolumen(contenedorDto.getVolumen());
+            contenedor.setEstado("EN_DEPOSITO");
+            contenedor.setClienteAsociado(clienteDTO.getId());
+
+            contenedor = contenedorRepository.save(contenedor);
+        }
 
         // 3. CREACIÓN DE LA SOLICITUD
         Solicitud solicitud = SolicitudMapper.dtoToEntity(dto);
