@@ -33,6 +33,9 @@ public class SecurityConfig {
                 // Permite el acceso a la consola H2 y swagger sin autenticación
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                
+                .requestMatchers(HttpMethod.GET, "/api/v1/logistica/solicitud/*/seguimiento").hasRole("CLIENTE")
+                
                 // Un CLIENTE puede crear una solicitud
                 .requestMatchers(HttpMethod.POST, "/api/v1/logistica/solicitud").hasRole("CLIENTE")
                 // Un OPERADOR puede ver todas las solicitudes
@@ -40,7 +43,6 @@ public class SecurityConfig {
                 // Un OPERADOR puede actualizar una solicitud
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/logistica/solicitud/**").hasRole("OPERADOR")
                 
-                .requestMatchers(HttpMethod.GET, "/api/v1/logistica/solicitud/*/seguimiento").hasRole("CLIENTE")
                 
                 .requestMatchers(HttpMethod.GET, "/api/v1/logistica/ruta/rutas-tentativas").hasRole("OPERADOR")
 
