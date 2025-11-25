@@ -152,11 +152,11 @@ public class SolicitudServiceImpl implements SolicitudService {
     // asignarlo a la solicitud. tambien recibe id contenedor para crearlo y asignarlo a la solicitud.
 
     @Override
-    @Transactional // ¡Descomenta esto para seguridad de datos!
+    @Transactional
     public SolicitudDto createSolicitudConClienteYContenedor(SolicitudDto dto) {
 
         // 1. GESTIÓN DEL CLIENTE
-        ClienteDTO clienteDTO = null; // Inicializamos
+        ClienteDTO clienteDTO = null;
         
         try {
             // Intentamos buscar por el ID que viene en el JSON

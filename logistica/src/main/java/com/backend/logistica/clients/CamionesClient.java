@@ -19,10 +19,17 @@ public class CamionesClient {
     public CamionDto obtenerPorId(Long id){
         try{
             return camionesRestClient.get()
-                .uri("/api/v1/gestion/camion/{id}" + id)
+                .uri("/{id}", id)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
-                    throw new NoSuchElementException("No se encontro cliente con id: " + id);
+                    // Imprimir el código de estado real
+                    System.out.println("ERROR DE CAMION: " + res.getStatusCode()); 
+                    
+                    if (res.getStatusCode().value() == 404) {
+                        throw new NoSuchElementException("No se encontro camion con id: " + id);
+                    } else {
+                        throw new RuntimeException("Error " + res.getStatusCode() + " al llamar a Gestion");
+                    }
                 })
                 .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
                     throw new RuntimeException("Error del servidor al obtener cliente con id: " + id);

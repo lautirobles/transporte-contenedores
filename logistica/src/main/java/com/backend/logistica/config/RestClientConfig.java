@@ -48,7 +48,7 @@ public class RestClientConfig {
                         // 4. Lo inyectamos en el header Authorization
                         request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Bearer " + tokenValue);
                     }
-                    
+    
                     // 5. Continuamos con la petición
                     return execution.execute(request, body);
                 })

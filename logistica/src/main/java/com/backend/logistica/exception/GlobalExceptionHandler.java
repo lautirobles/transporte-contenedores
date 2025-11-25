@@ -47,4 +47,13 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(LocalDateTime.now(), 500, "Error desconocido"));
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException e) {
+        log.error("Estado ilegal: ", e);
+        // 409 Conflict es ideal para cuando el recurso no está en el estado esperado
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT) 
+                .body(new ErrorResponse(LocalDateTime.now(), 409, e.getMessage()));
+    }
 }
