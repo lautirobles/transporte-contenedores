@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.backend.logistica.services.interfaces.TramoService;
 import com.backend.logistica.entities.dto.RutaDto;
@@ -32,7 +33,10 @@ public class TramoController {
 
     // cambiar estado del tramo
     @PatchMapping("/{idTramo}/estado")
-    public ResponseEntity<Void> updateEstadoTramo(@PathVariable Long idTramo, @RequestBody String estado){
+    public ResponseEntity<Void> updateEstadoTramo(
+        @PathVariable Long idTramo, 
+        @RequestParam String estado
+    ){
         service.updateEstadoTramo(idTramo, estado);
         return ResponseEntity.ok(null);
     }

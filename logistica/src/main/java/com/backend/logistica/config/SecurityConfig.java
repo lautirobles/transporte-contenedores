@@ -32,8 +32,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 // Permite el acceso a la consola H2 y swagger sin autenticación
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/logistica/solicitud/*/seguimiento").hasRole("CLIENTE")
                 
                 // Un CLIENTE puede crear una solicitud
@@ -43,10 +42,14 @@ public class SecurityConfig {
                 // Un OPERADOR puede actualizar una solicitud
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/logistica/solicitud/**").hasRole("OPERADOR")
                 
-                
+                // un operador puede ver las rutas tentativas
                 .requestMatchers(HttpMethod.GET, "/api/v1/logistica/ruta/rutas-tentativas").hasRole("OPERADOR")
 
+                // un OPERADOR puede asignar un camion al tramo
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/logistica/tramo/*/camion/**").hasRole("OPERADOR")
 
+                // un TRANSPORTISTA puede cambiarle el estado a un tramo asignando inicio o fin del mismo
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/logistica/tramo/*/estado/**").hasRole("TRANSPORTISTA")
 
                 // Cualquier otra solicitud (como /actuator) debe estar autenticada
                 .anyRequest().authenticated()

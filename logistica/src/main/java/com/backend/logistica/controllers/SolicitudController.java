@@ -28,11 +28,6 @@ public class SolicitudController {
     
     private final SolicitudService service;
 
-    @GetMapping("/test")
-    public String publicTest() {
-        return "PUBLIC - SIN SEGURIDAD";
-    }
-
     @GetMapping
     public ResponseEntity<List<SolicitudDto>> getSolicitudes(){
         var response = service.getAllSolicitudes();
@@ -65,20 +60,12 @@ public class SolicitudController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping
-    public ResponseEntity<SolicitudDto> createSolicitud(
-        @RequestBody SolicitudDto solicitudDto){
-            var response = service.createSolicitud(solicitudDto);
-
-            return ResponseEntity.ok(response);
-    }
-    
     /**
      * Endpoint para crear una solicitud completa.
      * Valida si el cliente existe; si no, lo crea.
      * Siempre crea un nuevo contenedor asociado a la solicitud.
      */
-    @PostMapping("/completa")
+    @PostMapping
     public ResponseEntity<SolicitudDto> createSolicitudCompleta(
         @RequestBody SolicitudDto solicitudDto) {
             var response = service.createSolicitudConClienteYContenedor(solicitudDto);

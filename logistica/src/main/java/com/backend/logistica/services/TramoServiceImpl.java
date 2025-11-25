@@ -48,12 +48,14 @@ public class TramoServiceImpl implements TramoService {
         Tramo tramo = tramoRepository.findById(idTramo)
             .orElseThrow(() -> new IllegalArgumentException("Tramo no encontrado con id: " + idTramo));
         
-        
-        tramo.setEstado(estado);
-        if("Iniciado".equals(estado)){
+        if("EN_PROCESO".equals(estado) && "PENDIENTE".equals(tramo.getEstado())){
             tramo.setFechaHoraInicioReal(LocalDateTime.now());
-        }else if("Finalizado".equals(estado)){
+            tramo.setEstado(estado);
+        }else if("COMPLETADO".equals(estado) && "EN_PROCESO".equals(tramo.getEstado())){
             tramo.setFechaHoraFinReal(LocalDateTime.now());
+            tramo.setEstado(estado);
+        }else{
+            throw new IllegalArgumentException("No puede asignarse ese estado al tramo, estado actual del tramo: " + tramo.getEstado());
         }
 
         tramoRepository.save(tramo);
