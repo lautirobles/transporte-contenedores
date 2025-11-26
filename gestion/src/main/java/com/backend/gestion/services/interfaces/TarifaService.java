@@ -1,5 +1,7 @@
 package com.backend.gestion.services.interfaces;
 import com.backend.gestion.entities.Tarifa;
+import com.backend.gestion.entities.dto.TarifasVigentesDto;
+
 import java.util.List;
 
 public interface TarifaService {
@@ -11,5 +13,7 @@ public interface TarifaService {
     Tarifa updateTarifa(Long id, Tarifa tarifa);
 
     void deleteTarifa(Long id);
+
+    TarifasVigentesDto getTarifasVigentes();
     
 }

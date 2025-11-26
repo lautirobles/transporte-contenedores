@@ -9,6 +9,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.backend.gestion.entities.Tarifa;
+import com.backend.gestion.entities.dto.TarifasVigentesDto;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,4 +48,9 @@ public class TarifaController {
         return ResponseEntity.noContent().build();
     }
 
+        // Endpoint consolidado para Logística
+    @GetMapping
+    public ResponseEntity<TarifasVigentesDto> getTarifasVigentes() {
+        return ResponseEntity.ok(service.getTarifasVigentes());
+    }
 }
